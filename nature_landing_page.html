@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reconnect with Nature</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; line-height: 1.6; }
+
+    header {
+      height: 100vh;
+      background: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470') no-repeat center/cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+    }
+
+    header h1 { font-size: 3rem; }
+    header p { margin: 10px 0; }
+
+    .btn {
+      padding: 10px 20px;
+      background: #2e7d32;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    section { padding: 50px 20px; text-align: center; }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .feature {
+      flex: 1 1 200px;
+      background: #f4f4f4;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+    }
+
+    .gallery img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    footer {
+      background: #2e7d32;
+      color: white;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Reconnect with Nature</h1>
+    <p>Discover the beauty and importance of our natural world</p>
+    <button class="btn" onclick="scrollToSection('about')">Explore More</button>
+  </div>
+</header>
+
+<section id="about">
+  <h2>About Nature</h2>
+  <p>Nature provides us with clean air, water, and resources essential for life. Protecting it ensures a sustainable future.</p>
+</section>
+
+<section>
+  <h2>Why Nature Matters</h2>
+  <div class="features">
+    <div class="feature">Biodiversity</div>
+    <div class="feature">Clean Air</div>
+    <div class="feature">Wildlife Conservation</div>
+    <div class="feature">Natural Beauty</div>
+  </div>
+</section>
+
+<section>
+  <h2>Gallery</h2>
+  <div class="gallery">
+    <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee">
+    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb">
+    <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e">
+    <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470">
+  </div>
+</section>
+
+<section>
+  <h2>Take Action</h2>
+  <p>Join us in protecting the planet for future generations.</p>
+  <button class="btn">Join the Movement</button>
+</section>
+
+<footer>
+  <p>© 2026 Nature Project | Follow us on social media</p>
+</footer>
+
+<script>
+  function scrollToSection(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>

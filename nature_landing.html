@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terra — Return to the Wild</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --moss: #2d4a2d;
+    --forest: #1a3320;
+    --sage: #7a9e7e;
+    --mist: #c8d8c0;
+    --bark: #6b4e3d;
+    --soil: #3d2b1f;
+    --dawn: #f5ede0;
+    --gold: #c9a84c;
+    --cream: #faf6ef;
+    --stone: #9ea89a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    color: var(--forest);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 4rem;
+    background: transparent;
+    transition: background 0.5s;
+  }
+  nav.scrolled {
+    background: rgba(26, 51, 32, 0.92);
+    backdrop-filter: blur(12px);
+  }
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    color: var(--cream);
+    text-transform: uppercase;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--mist);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--forest);
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 60%, rgba(45,74,45,0.6) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(122,158,126,0.15) 0%, transparent 50%),
+      linear-gradient(160deg, #0d1f10 0%, #1a3320 40%, #2d4a2d 100%);
+  }
+
+  /* Organic leaf shapes via SVG filter */
+  .hero-leaves {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .leaf {
+    position: absolute;
+    opacity: 0;
+    animation: floatLeaf linear infinite;
+  }
+  .leaf svg { fill: var(--sage); }
+
+  @keyframes floatLeaf {
+    0%   { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+    5%   { opacity: 0.18; }
+    95%  { opacity: 0.12; }
+    100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+  }
+
+  .hero-content {
+    position: relative;
+    text-align: center;
+    padding: 2rem;
+    animation: heroReveal 1.4s cubic-bezier(.16,1,.3,1) both;
+  }
+  @keyframes heroReveal {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+    animation: heroReveal 1.4s 0.2s cubic-bezier(.16,1,.3,1) both;
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(4rem, 10vw, 9rem);
+    font-weight: 300;
+    line-height: 0.9;
+    color: var(--cream);
+    letter-spacing: -0.01em;
+    animation: heroReveal 1.4s 0.35s cubic-bezier(.16,1,.3,1) both;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--mist);
+    display: block;
+  }
+
+  .hero-sub {
+    margin-top: 2rem;
+    font-size: 1rem;
+    font-weight: 200;
+    color: var(--mist);
+    letter-spacing: 0.05em;
+    max-width: 460px;
+    margin-inline: auto;
+    line-height: 1.8;
+    animation: heroReveal 1.4s 0.5s cubic-bezier(.16,1,.3,1) both;
+  }
+
+  .hero-cta {
+    margin-top: 3rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    animation: heroReveal 1.4s 0.65s cubic-bezier(.16,1,.3,1) both;
+  }
+  .btn-primary {
+    padding: 1rem 2.5rem;
+    background: var(--gold);
+    color: var(--soil);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: white;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+    mix-blend-mode: overlay;
+  }
+  .btn-primary:hover::after { transform: scaleX(1); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(201,168,76,0.4); }
+
+  .btn-ghost {
+    padding: 1rem 2rem;
+    background: transparent;
+    color: var(--mist);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid rgba(200,216,192,0.3);
+    transition: all 0.3s;
+  }
+  .btn-ghost:hover { border-color: var(--mist); color: var(--cream); }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--stone);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    animation: heroReveal 1.4s 1s cubic-bezier(.16,1,.3,1) both;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, var(--stone), transparent);
+    animation: scrollDrop 1.5s ease-in-out infinite;
+  }
+  @keyframes scrollDrop {
+    0%,100% { transform: scaleY(1); opacity: 1; }
+    50%      { transform: scaleY(0.5); opacity: 0.4; }
+  }
+
+  /* SECTION SHARED */
+  section { padding: 8rem 4rem; }
+
+  .section-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 1rem;
+    font-weight: 400;
+  }
+
+  /* PILLARS */
+  .pillars {
+    background: var(--cream);
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 6rem;
+    align-items: start;
+  }
+  .pillars-intro h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    font-weight: 300;
+    line-height: 1.15;
+    color: var(--forest);
+  }
+  .pillars-intro p {
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    color: var(--stone);
+    line-height: 1.9;
+    font-weight: 300;
+  }
+  .pillar-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+  .pillar-card {
+    background: white;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(.16,1,.3,1);
+    cursor: default;
+  }
+  .pillar-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s;
+  }
+  .pillar-card:hover { transform: translateY(-4px); }
+  .pillar-card:hover::before { transform: scaleX(1); }
+  .pillar-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 300;
+    color: var(--mist);
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+  .pillar-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--forest);
+    margin-bottom: 0.8rem;
+  }
+  .pillar-card p {
+    font-size: 0.85rem;
+    color: var(--stone);
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  /* GALLERY */
+  .gallery-section {
+    background: var(--forest);
+    padding: 8rem 0;
+  }
+  .gallery-header {
+    text-align: center;
+    padding: 0 4rem 4rem;
+  }
+  .gallery-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    font-weight: 300;
+    color: var(--cream);
+  }
+  .gallery-header h2 em {
+    font-style: italic;
+    color: var(--sage);
+  }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 300px 220px;
+    gap: 4px;
+    padding: 0 4px;
+  }
+  .gallery-item {
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+  }
+  .gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+  .gallery-item:nth-child(4) { grid-column: span 2; }
+
+  .gallery-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.7) brightness(0.85);
+    transition: transform 0.8s cubic-bezier(.16,1,.3,1), filter 0.5s;
+  }
+  .gallery-item:hover .gallery-img {
+    transform: scale(1.05);
+    filter: saturate(1) brightness(1);
+  }
+  .gallery-item-label {
+    position: absolute;
+    bottom: 1.2rem;
+    left: 1.5rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    font-weight: 300;
+  }
+
+  /* SVG PLACEHOLDER for gallery images */
+  .gallery-placeholder {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* QUOTE */
+  .quote-section {
+    background: var(--moss);
+    padding: 7rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .quote-section::before {
+    content: '"';
+    position: absolute;
+    top: -2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20rem;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+  }
+  blockquote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--cream);
+    line-height: 1.5;
+    max-width: 900px;
+    margin: 0 auto 2rem;
+    position: relative;
+  }
+  .quote-author {
+    font-size: 0.8rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 300;
+  }
+
+  /* STATS */
+  .stats-section {
+    background: var(--cream);
+    display: flex;
+    justify-content: center;
+    gap: 0;
+  }
+  .stat-item {
+    flex: 1;
+    max-width: 280px;
+    text-align: center;
+    padding: 5rem 2rem;
+    border-right: 1px solid var(--mist);
+    position: relative;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4.5rem;
+    font-weight: 300;
+    color: var(--forest);
+    line-height: 1;
+  }
+  .stat-unit {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    color: var(--gold);
+  }
+  .stat-label {
+    margin-top: 0.8rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  /* CTA SECTION */
+  .cta-section {
+    background: var(--soil);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 500px;
+  }
+  .cta-content {
+    padding: 7rem 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .cta-content h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    font-weight: 300;
+    color: var(--cream);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+  }
+  .cta-content p {
+    font-size: 0.9rem;
+    color: var(--stone);
+    line-height: 1.9;
+    font-weight: 300;
+    margin-bottom: 2.5rem;
+    max-width: 400px;
+  }
+  .email-form {
+    display: flex;
+    gap: 0;
+    max-width: 420px;
+  }
+  .email-form input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-right: none;
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  .email-form input::placeholder { color: var(--stone); }
+  .email-form input:focus { border-color: var(--gold); }
+  .email-form button {
+    padding: 1rem 1.8rem;
+    background: var(--gold);
+    color: var(--soil);
+    border: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .email-form button:hover { background: var(--mist); }
+
+  .cta-visual {
+    position: relative;
+    overflow: hidden;
+    background: var(--moss);
+  }
+  .cta-visual-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12rem;
+    color: rgba(255,255,255,0.05);
+    line-height: 1;
+    user-select: none;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--forest);
+    padding: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    color: var(--cream);
+    text-transform: uppercase;
+  }
+  .footer-tagline {
+    font-size: 0.75rem;
+    color: var(--stone);
+    letter-spacing: 0.1em;
+    margin-top: 0.3rem;
+    font-weight: 300;
+  }
+  .footer-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .footer-links a {
+    color: var(--stone);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    font-weight: 300;
+  }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-copy {
+    font-size: 0.75rem;
+    color: rgba(158,168,154,0.5);
+    font-weight: 300;
+  }
+
+  /* SCROLL ANIMATIONS */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s cubic-bezier(.16,1,.3,1), transform 0.9s cubic-bezier(.16,1,.3,1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.15s; }
+  .reveal-delay-2 { transition-delay: 0.3s; }
+  .reveal-delay-3 { transition-delay: 0.45s; }
+  .reveal-delay-4 { transition-delay: 0.6s; }
+
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 2rem; }
+    section { padding: 5rem 2rem; }
+    .pillars { grid-template-columns: 1fr; gap: 3rem; }
+    .pillar-grid { grid-template-columns: 1fr; }
+    .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+    .gallery-item:nth-child(1),
+    .gallery-item:nth-child(4) { grid-column: span 1; grid-row: span 1; }
+    .gallery-item { height: 200px; }
+    .stats-section { flex-direction: column; }
+    .stat-item { border-right: none; border-bottom: 1px solid var(--mist); }
+    .cta-section { grid-template-columns: 1fr; }
+    .cta-visual { display: none; }
+    footer { flex-direction: column; gap: 2rem; text-align: center; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="logo">Terra</div>
+  <ul class="nav-links">
+    <li><a href="#pillars">About</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#mission">Mission</a></li>
+    <li><a href="#join">Join</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+
+  <!-- Floating leaves -->
+  <div class="hero-leaves" id="leavesContainer"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Est. In the Beginning</p>
+    <h1>Return<em>to the Wild</em></h1>
+    <p class="hero-sub">The forest breathes. The rivers remember. Step beyond the noise and find what the earth has been quietly keeping for you.</p>
+    <div class="hero-cta">
+      <a href="#pillars" class="btn-primary">Discover More</a>
+      <a href="#gallery" class="btn-ghost">View Gallery</a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- PILLARS -->
+<section class="pillars" id="pillars">
+  <div class="pillars-intro">
+    <p class="section-label reveal">Why Nature Matters</p>
+    <h2 class="reveal reveal-delay-1">The earth gives.<br>We must listen.</h2>
+    <p class="reveal reveal-delay-2">From the tallest canopy to the smallest root, nature sustains every breath we take. Understanding our place within it is not a luxury — it is an essential return to ourselves.</p>
+  </div>
+  <div class="pillar-grid">
+    <div class="pillar-card reveal">
+      <div class="pillar-number">01</div>
+      <h3>Mental Wellness</h3>
+      <p>Time spent in nature reduces cortisol, sharpens focus, and quiets the relentless noise of modern life. The forest is the oldest medicine.</p>
+    </div>
+    <div class="pillar-card reveal reveal-delay-1">
+      <div class="pillar-number">02</div>
+      <h3>Biodiversity</h3>
+      <p>Over 8 million species share this planet with us. Each extinction is a thread pulled from the web of life — one we cannot replace.</p>
+    </div>
+    <div class="pillar-card reveal reveal-delay-2">
+      <div class="pillar-number">03</div>
+      <h3>Conservation</h3>
+      <p>Protecting wild places is not about keeping humans out — it is about restoring our role as stewards, not conquerors, of the natural world.</p>
+    </div>
+    <div class="pillar-card reveal reveal-delay-3">
+      <div class="pillar-number">04</div>
+      <h3>Regeneration</h3>
+      <p>Nature's capacity to heal is extraordinary — given space and time. Rewilding initiatives across six continents are already proving this truth.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery-section" id="gallery">
+  <div class="gallery-header">
+    <p class="section-label reveal" style="color:var(--sage)">Visual Journey</p>
+    <h2 class="reveal reveal-delay-1">The world, <em>unfiltered</em></h2>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item reveal">
+      <svg class="gallery-placeholder" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <radialGradient id="g1" cx="40%" cy="60%">
+            <stop offset="0%" stop-color="#2d4a2d"/>
+            <stop offset="100%" stop-color="#0d1f10"/>
+          </radialGradient>
+        </defs>
+        <rect width="600" height="600" fill="url(#g1)"/>
+        <!-- Stylized forest silhouette -->
+        <g fill="#1a3320" opacity="0.8">
+          <polygon points="100,600 160,320 220,600"/>
+          <polygon points="150,600 240,250 330,600"/>
+          <polygon points="280,600 380,200 480,600"/>
+          <polygon points="400,600 480,300 560,600"/>
+          <polygon points="50,600 120,380 190,600"/>
+          <polygon points="480,600 540,350 600,600"/>
+        </g>
+        <g fill="#3d6b3d" opacity="0.5">
+          <polygon points="200,600 270,350 340,600"/>
+          <polygon points="350,600 420,280 490,600"/>
+        </g>
+        <!-- Moon -->
+        <circle cx="450" cy="150" r="50" fill="none" stroke="#c8d8c0" stroke-width="1" opacity="0.4"/>
+        <circle cx="450" cy="150" r="6" fill="#c8d8c0" opacity="0.3"/>
+        <!-- Stars -->
+        <g fill="#c8d8c0" opacity="0.5">
+          <circle cx="80" cy="80" r="1.5"/>
+          <circle cx="200" cy="50" r="1"/>
+          <circle cx="320" cy="100" r="1.5"/>
+          <circle cx="520" cy="60" r="1"/>
+          <circle cx="140" cy="180" r="1"/>
+          <circle cx="560" cy="120" r="1.5"/>
+        </g>
+        <!-- Mist -->
+        <ellipse cx="300" cy="500" rx="250" ry="60" fill="#7a9e7e" opacity="0.08"/>
+      </svg>
+      <span class="gallery-item-label">Ancient Forest</span>
+    </div>
+    <div class="gallery-item reveal reveal-delay-1">
+      <svg class="gallery-placeholder" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.8"/>
+            <stop offset="60%" stop-color="#6b4e3d"/>
+            <stop offset="100%" stop-color="#3d2b1f"/>
+          </linearGradient>
+        </defs>
+        <rect width="400" height="300" fill="url(#g2)"/>
+        <!-- Sun setting -->
+        <circle cx="200" cy="160" r="55" fill="#f5ede0" opacity="0.9"/>
+        <circle cx="200" cy="160" r="40" fill="#c9a84c"/>
+        <!-- Ripple water -->
+        <ellipse cx="200" cy="220" rx="180" ry="20" fill="none" stroke="#c9a84c" stroke-width="1" opacity="0.4"/>
+        <ellipse cx="200" cy="240" rx="160" ry="15" fill="none" stroke="#c9a84c" stroke-width="1" opacity="0.25"/>
+        <ellipse cx="200" cy="260" rx="140" ry="10" fill="none" stroke="#c9a84c" stroke-width="0.5" opacity="0.15"/>
+        <!-- Mountain silhouette -->
+        <polygon points="0,300 0,200 80,130 160,200 220,160 300,200 400,140 400,300" fill="#3d2b1f" opacity="0.7"/>
+      </svg>
+      <span class="gallery-item-label">Golden Horizon</span>
+    </div>
+    <div class="gallery-item reveal reveal-delay-2">
+      <svg class="gallery-placeholder" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="g3" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1a4a6e"/>
+            <stop offset="100%" stop-color="#0a1f2e"/>
+          </linearGradient>
+        </defs>
+        <rect width="400" height="300" fill="url(#g3)"/>
+        <!-- Ocean waves -->
+        <g fill="none" stroke="#5b9ec9" stroke-width="1.5" opacity="0.4">
+          <path d="M0,150 Q50,120 100,150 Q150,180 200,150 Q250,120 300,150 Q350,180 400,150"/>
+          <path d="M0,180 Q50,155 100,180 Q150,205 200,180 Q250,155 300,180 Q350,205 400,180"/>
+          <path d="M0,210 Q50,190 100,210 Q150,230 200,210 Q250,190 300,210 Q350,230 400,210"/>
+        </g>
+        <!-- Stars -->
+        <g fill="white" opacity="0.6">
+          <circle cx="60" cy="40" r="1.5"/>
+          <circle cx="180" cy="25" r="1"/>
+          <circle cx="300" cy="55" r="1.5"/>
+          <circle cx="360" cy="30" r="1"/>
+          <circle cx="120" cy="70" r="1"/>
+          <circle cx="240" cy="80" r="0.8"/>
+        </g>
+        <!-- Moon reflection -->
+        <circle cx="200" cy="80" r="30" fill="#c8d8c0" opacity="0.15"/>
+        <circle cx="200" cy="80" r="22" fill="#c8d8c0" opacity="0.12"/>
+        <ellipse cx="200" cy="200" rx="15" ry="40" fill="#c8d8c0" opacity="0.08"/>
+      </svg>
+      <span class="gallery-item-label">Midnight Tide</span>
+    </div>
+    <div class="gallery-item reveal reveal-delay-3">
+      <svg class="gallery-placeholder" viewBox="0 0 800 220" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="g4" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#2d4a2d"/>
+            <stop offset="50%" stop-color="#7a9e7e"/>
+            <stop offset="100%" stop-color="#2d4a2d"/>
+          </linearGradient>
+        </defs>
+        <rect width="800" height="220" fill="url(#g4)"/>
+        <!-- Rolling hills -->
+        <path d="M0,220 Q200,100 400,150 Q600,200 800,80 L800,220Z" fill="#1a3320" opacity="0.7"/>
+        <path d="M0,220 Q100,170 300,190 Q500,210 700,160 Q800,140 800,220Z" fill="#0d1f10" opacity="0.8"/>
+        <!-- Wildflowers -->
+        <g fill="#c9a84c" opacity="0.5">
+          <circle cx="150" cy="185" r="3"/>
+          <circle cx="250" cy="195" r="2"/>
+          <circle cx="450" cy="170" r="3"/>
+          <circle cx="600" cy="180" r="2"/>
+          <circle cx="700" cy="175" r="3"/>
+        </g>
+        <!-- Mist -->
+        <rect x="0" y="0" width="800" height="60" fill="white" opacity="0.04"/>
+      </svg>
+      <span class="gallery-item-label">Valley Mist</span>
+    </div>
+    <div class="gallery-item reveal reveal-delay-1">
+      <svg class="gallery-placeholder" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <radialGradient id="g5" cx="50%" cy="30%">
+            <stop offset="0%" stop-color="#5b8c5b"/>
+            <stop offset="100%" stop-color="#1a3320"/>
+          </radialGradient>
+        </defs>
+        <rect width="400" height="220" fill="url(#g5)"/>
+        <!-- Fern/leaf pattern -->
+        <g stroke="#7a9e7e" stroke-width="1" fill="none" opacity="0.5">
+          <path d="M200,220 Q180,180 160,140 Q140,100 120,80"/>
+          <path d="M160,140 Q140,130 120,140"/>
+          <path d="M170,160 Q150,145 130,155"/>
+          <path d="M180,180 Q160,165 140,175"/>
+          <path d="M200,220 Q220,180 240,140 Q260,100 280,80"/>
+          <path d="M240,140 Q260,130 280,140"/>
+          <path d="M230,160 Q250,145 270,155"/>
+          <path d="M220,180 Q240,165 260,175"/>
+        </g>
+        <!-- Dew drops -->
+        <g fill="#c8d8c0" opacity="0.4">
+          <circle cx="130" cy="140" r="2.5"/>
+          <circle cx="260" cy="155" r="2"/>
+          <circle cx="180" cy="175" r="1.5"/>
+        </g>
+      </svg>
+      <span class="gallery-item-label">Fern Grove</span>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section class="quote-section">
+  <blockquote class="reveal">
+    "In every walk with nature, one receives far more than he seeks."
+  </blockquote>
+  <p class="quote-author reveal reveal-delay-1">— John Muir, Naturalist</p>
+</section>
+
+<!-- STATS -->
+<section class="stats-section" id="mission">
+  <div class="stat-item reveal">
+    <div class="stat-number">80<span class="stat-unit">%</span></div>
+    <p class="stat-label">of Earth's biodiversity<br>found in forests</p>
+  </div>
+  <div class="stat-item reveal reveal-delay-1">
+    <div class="stat-number">1<span class="stat-unit">M+</span></div>
+    <p class="stat-label">species currently<br>threatened with extinction</p>
+  </div>
+  <div class="stat-item reveal reveal-delay-2">
+    <div class="stat-number">3<span class="stat-unit">B</span></div>
+    <p class="stat-label">people rely on nature<br>for their livelihoods</p>
+  </div>
+  <div class="stat-item reveal reveal-delay-3">
+    <div class="stat-number">30<span class="stat-unit">%</span></div>
+    <p class="stat-label">of land needed as<br>protected by 2030</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="join" style="padding:0;">
+  <div class="cta-content">
+    <p class="section-label reveal" style="color:var(--gold)">Join the Movement</p>
+    <h2 class="reveal reveal-delay-1">The earth is calling.<br>Will you answer?</h2>
+    <p class="reveal reveal-delay-2">Sign up for dispatches from the wild — conservation stories, rewilding updates, and ways to reconnect with the natural world, delivered to your inbox.</p>
+    <div class="email-form reveal reveal-delay-3">
+      <input type="email" placeholder="your@email.com">
+      <button type="button">Subscribe</button>
+    </div>
+  </div>
+  <div class="cta-visual">
+    <div class="cta-visual-inner">🌿</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-logo">Terra</div>
+    <div class="footer-tagline">Return to the wild</div>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#">About</a></li>
+    <li><a href="#">Conservation</a></li>
+    <li><a href="#">Gallery</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 Terra. All rights reserved.</div>
+</footer>
+
+<script>
+  // Sticky nav
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Floating leaves
+  const container = document.getElementById('leavesContainer');
+  const leafPaths = [
+    'M10,0 Q20,-5 30,0 Q35,10 25,20 Q15,25 5,20 Q-5,10 10,0',
+    'M15,0 Q28,3 30,15 Q28,28 15,30 Q2,28 0,15 Q2,3 15,0',
+    'M0,10 Q8,-2 20,0 Q28,8 25,20 Q17,28 5,25 Q-3,17 0,10',
+  ];
+
+  for (let i = 0; i < 12; i++) {
+    const leaf = document.createElement('div');
+    leaf.className = 'leaf';
+    const size = 15 + Math.random() * 25;
+    const left = Math.random() * 100;
+    const duration = 12 + Math.random() * 18;
+    const delay = Math.random() * 15;
+    const path = leafPaths[Math.floor(Math.random() * leafPaths.length)];
+    leaf.style.cssText = `
+      left: ${left}%;
+      width: ${size}px;
+      height: ${size}px;
+      animation-duration: ${duration}s;
+      animation-delay: ${delay}s;
+    `;
+    leaf.innerHTML = `<svg viewBox="0 0 30 30" width="${size}" height="${size}">
+      <path d="${path}" fill="#7a9e7e" opacity="${0.1 + Math.random() * 0.2}"/>
+    </svg>`;
+    container.appendChild(leaf);
+  }
+</script>
+</body>
+</html>
